@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(source /Users/alisher/Desktop/expense-tracker/venv/bin/activate)",
-      "Bash(pip list:*)"
+      "Bash(pip list:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
