@@ -4,7 +4,9 @@
       "Bash(source /Users/alisher/Desktop/expense-tracker/venv/bin/activate)",
       "Bash(pip list:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
