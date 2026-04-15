@@ -6,7 +6,16 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git pull:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(python *)",
+      "Bash(pip install *)",
+      "Bash(sqlite3 *)",
+      "Bash(pytest *)",
+      "Bash(curl -s http://127.0.0.1:5001)",
+      "Bash(pkill -f \"python app.py\")",
+      "Bash(pkill -9 -f \"python app.py\")",
+      "Bash(lsof -ti:5001)",
+      "Bash(xargs kill *)"
     ]
   }
 }
