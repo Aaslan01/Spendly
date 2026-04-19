@@ -1,5 +1,5 @@
 import sqlite3
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 DATABASE_PATH = "expense_tracker.db"
 
@@ -48,6 +48,30 @@ def init_db():
 
     conn.commit()
     conn.close()
+
+
+def create_user(name, email, password):
+    """
+    Creates a new user with the given name, email, and password.
+    Hashes the password using werkzeug before storing.
+    Returns the new user's ID.
+    Raises sqlite3.IntegrityError if email is already registered.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+
+    password_hash = generate_password_hash(password)
+
+    cursor.execute(
+        "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+        (name, email, password_hash)
+    )
+
+    conn.commit()
+    user_id = cursor.lastrowid
+    conn.close()
+
+    return user_id
 
 
 def seed_db():
