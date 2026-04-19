@@ -15,7 +15,8 @@
       "Bash(pkill -f \"python app.py\")",
       "Bash(pkill -9 -f \"python app.py\")",
       "Bash(lsof -ti:5001)",
-      "Bash(xargs kill *)"
+      "Bash(xargs kill *)",
+      "Bash(python3 *)"
     ]
   }
 }
