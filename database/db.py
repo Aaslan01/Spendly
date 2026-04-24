@@ -50,6 +50,19 @@ def init_db():
     conn.close()
 
 
+def get_user_by_email(email):
+    """
+    Fetches a user by email address.
+    Returns the user row as a dict-like object, or None if not found.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+    user = cursor.fetchone()
+    conn.close()
+    return user
+
+
 def create_user(name, email, password):
     """
     Creates a new user with the given name, email, and password.

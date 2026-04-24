@@ -10,7 +10,20 @@
       "Bash(git checkout *)",
       "Bash(git branch *)",
       "Bash(python *)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(lsof -ti:5001)",
+      "Bash(xargs kill *)",
+      "Bash(curl -s http://127.0.0.1:5001/login)",
+      "Bash(curl -s -c /tmp/cookies.txt -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -L)",
+      "Bash(curl -s -c /tmp/cookies.txt -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -w \"%{http_code}\" -o /tmp/login_response.html)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -X POST http://127.0.0.1:5001/login -d \"email=wrong@test.com&password=wrong\")",
+      "Bash(curl -s -c /tmp/cookies.txt http://127.0.0.1:5001/logout -w \"%{http_code}\" -o /tmp/logout_response.html)",
+      "Bash(curl -s -c /tmp/cookies.txt -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -w \"\\\\nHTTP_CODE:%{http_code}\")",
+      "Bash(curl -s -b /tmp/cookies.txt http://127.0.0.1:5001/logout -w \"\\\\nHTTP_CODE:%{http_code}\")",
+      "Bash(curl -s http://127.0.0.1:5001/logout -L)",
+      "Bash(curl -s -c /tmp/cookies.txt -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\")",
+      "Bash(curl -s -c /tmp/cookies.txt -L -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\")"
     ]
   }
 }
