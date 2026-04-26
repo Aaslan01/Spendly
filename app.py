@@ -100,7 +100,43 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    # Authentication check
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    # Hardcoded user data (will be replaced with DB query in Step 05)
+    user = {
+        "name": "Demo User",
+        "email": "demo@spendly.com",
+        "member_since": "April 2026"
+    }
+
+    # Hardcoded summary stats
+    summary = {
+        "total_spent": 555.50,
+        "transaction_count": 8,
+        "top_category": "Shopping"
+    }
+
+    # Hardcoded recent transactions
+    transactions = [
+        {"date": "2026-04-15", "description": "Grocery shopping", "category": "Food", "amount": 55.00},
+        {"date": "2026-04-14", "description": "Miscellaneous", "category": "Other", "amount": 25.00},
+        {"date": "2026-04-12", "description": "New shoes", "category": "Shopping", "amount": 200.00},
+        {"date": "2026-04-10", "description": "Movie tickets and dinner", "category": "Entertainment", "amount": 60.00},
+        {"date": "2026-04-07", "description": "Pharmacy", "category": "Health", "amount": 35.00},
+    ]
+
+    # Hardcoded category breakdown
+    categories = [
+        {"name": "Food", "total": 70.50, "count": 2},
+        {"name": "Shopping", "total": 200.00, "count": 1},
+        {"name": "Transport", "total": 45.00, "count": 1},
+        {"name": "Bills", "total": 120.00, "count": 1},
+        {"name": "Entertainment", "total": 60.00, "count": 1},
+    ]
+
+    return render_template("profile.html", user=user, summary=summary, transactions=transactions, categories=categories)
 
 
 @app.route("/expenses/add")
