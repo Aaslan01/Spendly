@@ -19,22 +19,22 @@
         <!-- Summary Stats -->
         <div class="stats-row">
             <div class="stat-card">
-                <span class="stat-label">Total Spent</span>
+                <span class="stat-label"><i data-lucide="credit-card"></i> Total Spent</span>
                 <span class="stat-value">₹{{ "%.2f"|format(summary.total_spent) }}</span>
             </div>
             <div class="stat-card">
-                <span class="stat-label">Transactions</span>
+                <span class="stat-label"><i data-lucide="arrow-down-right"></i> Transactions</span>
                 <span class="stat-value">{{ summary.transaction_count }}</span>
             </div>
             <div class="stat-card">
-                <span class="stat-label">Top Category</span>
+                <span class="stat-label"><i data-lucide="tag"></i> Top Category</span>
                 <span class="stat-value">{{ summary.top_category }}</span>
             </div>
         </div>
 
         <!-- Transaction History -->
         <div class="profile-card">
-            <h2 class="section-title">Recent Transactions</h2>
+            <h2 class="section-title"><i data-lucide="clock"></i> Recent Transactions</h2>
             <table class="transactions-table">
                 <thead>
                     <tr>
@@ -59,7 +59,7 @@
 
         <!-- Category Breakdown -->
         <div class="profile-card">
-            <h2 class="section-title">Category Breakdown</h2>
+            <h2 class="section-title"><i data-lucide="pie-chart"></i> Category Breakdown</h2>
             <div class="category-list">
                 {% for cat in categories %}
                 <div class="category-row">
