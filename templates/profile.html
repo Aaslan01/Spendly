@@ -14,6 +14,7 @@
                 <p class="profile-email">{{ user.email }}</p>
                 <p class="profile-member">Member since {{ user.member_since }}</p>
             </div>
+            <a href="#" class="btn-ghost profile-edit-btn">Edit profile</a>
         </div>
 
         <!-- Summary Stats -->
@@ -32,48 +33,53 @@
             </div>
         </div>
 
-        <!-- Transaction History -->
-        <div class="profile-card">
-            <h2 class="section-title"><i data-lucide="clock"></i> Recent Transactions</h2>
-            <table class="transactions-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tx in transactions %}
-                    <tr>
-                        <td class="tx-date">{{ tx.date }}</td>
-                        <td class="tx-desc">{{ tx.description }}</td>
-                        <td><span class="category-badge category-{{ tx.category|lower }}">{{ tx.category }}</span></td>
-                        <td class="tx-amount">₹{{ "%.2f"|format(tx.amount) }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <!-- Transactions + Breakdown side by side -->
+        <div class="profile-bottom-grid">
 
-        <!-- Category Breakdown -->
-        <div class="profile-card">
-            <h2 class="section-title"><i data-lucide="pie-chart"></i> Category Breakdown</h2>
-            <div class="category-list">
-                {% for cat in categories %}
-                <div class="category-row">
-                    <div class="category-info">
-                        <span class="category-name">{{ cat.name }}</span>
-                        <span class="category-count">{{ cat.count }} transaction{% if cat.count != 1 %}s{% endif %}</span>
-                    </div>
-                    <div class="category-bar-track">
-                        <div class="category-bar" style="width: {{ (cat.total / summary.total_spent * 100)|round|int }}%"></div>
-                    </div>
-                    <span class="category-total">₹{{ "%.2f"|format(cat.total) }}</span>
-                </div>
-                {% endfor %}
+            <!-- Transaction History -->
+            <div class="profile-card">
+                <h2 class="section-title"><i data-lucide="clock"></i> Recent Transactions</h2>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in transactions %}
+                        <tr>
+                            <td class="tx-date">{{ tx.date }}</td>
+                            <td class="tx-desc">{{ tx.description }}</td>
+                            <td><span class="category-badge category-{{ tx.category|lower }}">{{ tx.category }}</span></td>
+                            <td class="tx-amount">₹{{ "%.2f"|format(tx.amount) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+
+            <!-- Category Breakdown -->
+            <div class="profile-card">
+                <h2 class="section-title"><i data-lucide="pie-chart"></i> Category Breakdown</h2>
+                <div class="category-list">
+                    {% for cat in categories %}
+                    <div class="category-row">
+                        <div class="category-info">
+                            <span class="category-name">{{ cat.name }}</span>
+                            <span class="category-count">{{ cat.count }} transaction{% if cat.count != 1 %}s{% endif %}</span>
+                        </div>
+                        <div class="category-bar-track">
+                            <div class="category-bar category-bar--{{ cat.name|lower }}" style="width: {{ (cat.total / summary.total_spent * 100)|round|int }}%"></div>
+                        </div>
+                        <span class="category-total">₹{{ "%.2f"|format(cat.total) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
         </div>
 
     </div>
