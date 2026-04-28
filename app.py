@@ -31,21 +31,21 @@ def register():
 
         # Validation: check for empty fields
         if not name or not email or not password or not confirm_password:
-            flash("All fields are required")
+            flash("All fields are required", "error")
             return render_template("register.html", name=name, email=email)
 
         # Validation: passwords must match
         if password != confirm_password:
-            flash("Passwords do not match")
+            flash("Passwords do not match", "error")
             return render_template("register.html", name=name, email=email)
 
         # Try to create user
         try:
             create_user(name, email, password)
-            flash("Account created successfully! Please log in.")
+            flash("Account created successfully! Please log in.", "success")
             return redirect(url_for("login"))
         except sqlite3.IntegrityError:
-            flash("Email already registered")
+            flash("Email already registered", "error")
             return render_template("register.html", name=name, email=email)
 
     return render_template("register.html")
@@ -61,17 +61,17 @@ def login():
 
         # Validation: check for empty fields
         if not email or not password:
-            flash("All fields are required")
+            flash("All fields are required", "error")
             return render_template("login.html")
 
         # Fetch user and verify password
         user = get_user_by_email(email)
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
-            flash("Welcome back!")
+            flash("Welcome back!", "success")
             return redirect(url_for("landing"))
         else:
-            flash("Invalid email or password.")
+            flash("Invalid email or password.", "error")
             return render_template("login.html")
 
     return render_template("login.html")
@@ -94,7 +94,7 @@ def privacy():
 @app.route("/logout")
 def logout():
     session.clear()
-    flash("You have been logged out")
+    flash("You have been logged out", "info")
     return redirect(url_for("landing"))
 
 
