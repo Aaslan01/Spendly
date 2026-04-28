@@ -26,7 +26,12 @@
       "Bash(curl -s -c /tmp/cookies.txt -L -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\")",
       "Bash(curl -s http://localhost:5001)",
       "Bash(curl -s http://localhost:5001/profile)",
-      "Bash(curl -s -c /tmp/cookies.txt -b /tmp/cookies.txt -X POST http://localhost:5001/login -d \"email=demo@spendly.com&password=demo123\" -L)"
+      "Bash(curl -s -c /tmp/cookies.txt -b /tmp/cookies.txt -X POST http://localhost:5001/login -d \"email=demo@spendly.com&password=demo123\" -L)",
+      "Bash(sqlite3 *)",
+      "Bash(xargs -I {} sh -c 'echo \"=== {} ===\" && cat \"{}\"')",
+      "Bash(grep -ri \"request\\\\|headers\\\\|remote\" /Users/alisher/Desktop/expense-tracker --include=\"*.py\" ! -path \"*/venv/*\")",
+      "Bash(pip install *)",
+      "Bash(curl *)"
     ]
   }
 }
