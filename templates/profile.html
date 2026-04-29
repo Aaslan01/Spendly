@@ -83,7 +83,7 @@
         <div class="stats-row">
             <div class="stat-card">
                 <span class="stat-label"><i data-lucide="credit-card"></i> Total Spent</span>
-                <span class="stat-value">{{ currency_symbol }}{{ "%.2f"|format(summary.total_spent) }} {{ user.currency }}</span>
+                <span class="stat-value">{{ currency_symbol }}{{ "%.2f"|format(summary.total_spent) }}</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label"><i data-lucide="arrow-down-right"></i> Transactions</span>
@@ -116,7 +116,7 @@
                             <td class="tx-date">{{ tx.date }}</td>
                             <td class="tx-desc">{{ tx.description }}</td>
                             <td><span class="category-badge category-{{ tx.category|lower }}">{{ tx.category }}</span></td>
-                            <td class="tx-amount">{{ currency_symbol }}{{ "%.2f"|format(tx.amount) }} {{ user.currency }}</td>
+                            <td class="tx-amount">{{ currency_symbol }}{{ "%.2f"|format(tx.amount) }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -136,7 +136,7 @@
                         <div class="category-bar-track">
                             <div class="category-bar category-bar--{{ cat.name|lower }}" style="width: {{ (cat.total / summary.total_spent * 100)|round|int }}%"></div>
                         </div>
-                        <span class="category-total">{{ currency_symbol }}{{ "%.2f"|format(cat.total) }} {{ user.currency }}</span>
+                        <span class="category-total">{{ currency_symbol }}{{ "%.2f"|format(cat.total) }}</span>
                     </div>
                     {% endfor %}
                 </div>

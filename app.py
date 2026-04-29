@@ -103,9 +103,10 @@ def register():
             flash("Passwords do not match", "error")
             return render_template("register.html", name=name, email=email)
 
-        # Try to create user
+        # Try to create user (detect currency from IP for initial preference)
         try:
-            create_user(name, email, password)
+            detected_currency, _ = detect_currency_from_ip()
+            create_user(name, email, password, currency=detected_currency or 'CAD')
             flash("Account created successfully! Please log in.", "success")
             return redirect(url_for("login"))
         except sqlite3.IntegrityError:
