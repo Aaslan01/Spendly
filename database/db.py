@@ -29,9 +29,17 @@ def init_db():
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
-            created_at TEXT DEFAULT (datetime('now'))
+            created_at TEXT DEFAULT (datetime('now')),
+            currency TEXT DEFAULT 'CAD'
         )
     """)
+
+    # Add currency column to existing tables (migration for users who already have the db)
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN currency TEXT DEFAULT 'CAD'")
+    except sqlite3.OperationalError:
+        # Column already exists, safe to ignore
+        pass
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
@@ -76,7 +84,7 @@ def get_user_by_id(user_id):
     return user
 
 
-def create_user(name, email, password):
+def create_user(name, email, password, currency='CAD'):
     """
     Creates a new user with the given name, email, and password.
     Hashes the password using werkzeug before storing.
@@ -89,8 +97,8 @@ def create_user(name, email, password):
     password_hash = generate_password_hash(password)
 
     cursor.execute(
-        "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-        (name, email, password_hash)
+        "INSERT INTO users (name, email, password_hash, currency) VALUES (?, ?, ?, ?)",
+        (name, email, password_hash, currency)
     )
 
     conn.commit()
@@ -98,6 +106,17 @@ def create_user(name, email, password):
     conn.close()
 
     return user_id
+
+
+def update_user_currency(user_id, currency):
+    """
+    Updates the currency preference for a user.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET currency = ? WHERE id = ?", (currency, user_id))
+    conn.commit()
+    conn.close()
 
 
 def seed_db():
