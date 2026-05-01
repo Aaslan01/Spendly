@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 from werkzeug.exceptions import abort
 
 from database.db import get_db, init_db, seed_db, create_user, get_user_by_email, get_user_by_id, update_user_currency
+from database.queries import get_summary_stats, get_recent_transactions, get_category_breakdown
+from datetime import datetime
 from werkzeug.security import check_password_hash
 
 
@@ -177,7 +179,7 @@ def profile():
         return redirect(url_for("login"))
 
     # Format member since date
-    member_since = user["created_at"][:7] if user["created_at"] else "Unknown"
+    member_since = datetime.strptime(user["created_at"][:10], "%Y-%m-%d").strftime("%B %Y") if user["created_at"] else "Unknown"
     user_data = {
         "name": user["name"],
         "email": user["email"],
@@ -188,30 +190,11 @@ def profile():
     # Get currency symbol
     currency_symbol = get_currency_symbol(user_data["currency"])
 
-    # Hardcoded summary stats (will be replaced with DB queries in later steps)
-    summary = {
-        "total_spent": 555.50,
-        "transaction_count": 8,
-        "top_category": "Shopping"
-    }
+    summary = get_summary_stats(session["user_id"])
 
-    # Hardcoded recent transactions
-    transactions = [
-        {"date": "2026-04-15", "description": "Grocery shopping", "category": "Food", "amount": 55.00},
-        {"date": "2026-04-14", "description": "Miscellaneous", "category": "Other", "amount": 25.00},
-        {"date": "2026-04-12", "description": "New shoes", "category": "Shopping", "amount": 200.00},
-        {"date": "2026-04-10", "description": "Movie tickets and dinner", "category": "Entertainment", "amount": 60.00},
-        {"date": "2026-04-07", "description": "Pharmacy", "category": "Health", "amount": 35.00},
-    ]
+    transactions = get_recent_transactions(session["user_id"])
 
-    # Hardcoded category breakdown
-    categories = [
-        {"name": "Food", "total": 70.50, "count": 2},
-        {"name": "Shopping", "total": 200.00, "count": 1},
-        {"name": "Transport", "total": 45.00, "count": 1},
-        {"name": "Bills", "total": 120.00, "count": 1},
-        {"name": "Entertainment", "total": 60.00, "count": 1},
-    ]
+    categories = get_category_breakdown(session["user_id"])
 
     return render_template("profile.html", user=user_data, summary=summary, transactions=transactions, categories=categories, currency_symbol=currency_symbol)
 

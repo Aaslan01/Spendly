@@ -32,7 +32,8 @@
       "Bash(grep -ri \"request\\\\|headers\\\\|remote\" /Users/alisher/Desktop/expense-tracker --include=\"*.py\" ! -path \"*/venv/*\")",
       "Bash(pip install *)",
       "Bash(curl *)",
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(pkill -f \"python app.py\")"
     ]
   }
 }

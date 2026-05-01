@@ -131,12 +131,11 @@
                     <div class="category-row">
                         <div class="category-info">
                             <span class="category-name">{{ cat.name }}</span>
-                            <span class="category-count">{{ cat.count }} transaction{% if cat.count != 1 %}s{% endif %}</span>
                         </div>
                         <div class="category-bar-track">
-                            <div class="category-bar category-bar--{{ cat.name|lower }}" style="width: {{ (cat.total / summary.total_spent * 100)|round|int }}%"></div>
+                            <div class="category-bar category-bar--{{ cat.name|lower }}" style="width: {{ cat.pct }}%"></div>
                         </div>
-                        <span class="category-total">{{ currency_symbol }}{{ "%.2f"|format(cat.total) }}</span>
+                        <span class="category-total">{{ currency_symbol }}{{ "%.2f"|format(cat.amount) }}</span>
                     </div>
                     {% endfor %}
                 </div>
