@@ -31,7 +31,8 @@
       "Bash(xargs -I {} sh -c 'echo \"=== {} ===\" && cat \"{}\"')",
       "Bash(grep -ri \"request\\\\|headers\\\\|remote\" /Users/alisher/Desktop/expense-tracker --include=\"*.py\" ! -path \"*/venv/*\")",
       "Bash(pip install *)",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(git pull *)"
     ]
   }
 }
