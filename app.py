@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 
 from database.db import get_db, init_db, seed_db, create_user, get_user_by_email, get_user_by_id, update_user_currency
 from database.queries import get_summary_stats, get_recent_transactions, get_category_breakdown
-from datetime import datetime
+from datetime import datetime, date as date_type
 from werkzeug.security import check_password_hash
 
 
@@ -190,13 +190,68 @@ def profile():
     # Get currency symbol
     currency_symbol = get_currency_symbol(user_data["currency"])
 
-    summary = get_summary_stats(session["user_id"])
+    # Parse and validate date filter params
+    def _parse_date(s):
+        try:
+            return datetime.strptime(s, "%Y-%m-%d").date() if s else None
+        except ValueError:
+            return None
 
-    transactions = get_recent_transactions(session["user_id"])
+    d_from = _parse_date(request.args.get("date_from", "").strip())
+    d_to   = _parse_date(request.args.get("date_to",   "").strip())
 
-    categories = get_category_breakdown(session["user_id"])
+    if d_from and d_to and d_from > d_to:
+        flash("Start date must be before end date.", "error")
+        d_from = d_to = None
 
-    return render_template("profile.html", user=user_data, summary=summary, transactions=transactions, categories=categories, currency_symbol=currency_symbol)
+    date_from = d_from.strftime("%Y-%m-%d") if d_from else None
+    date_to   = d_to.strftime("%Y-%m-%d")   if d_to   else None
+
+    # Compute preset date ranges
+    today = date_type.today()
+
+    def _first_of_month_n_months_ago(n):
+        month = today.month - n
+        year  = today.year
+        while month <= 0:
+            month += 12
+            year  -= 1
+        return date_type(year, month, 1)
+
+    presets = {
+        "this_month":    (today.replace(day=1).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
+        "last_3_months": (_first_of_month_n_months_ago(3).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
+        "last_6_months": (_first_of_month_n_months_ago(6).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
+    }
+
+    # Determine which preset is active
+    if date_from is None and date_to is None:
+        active_preset = "all_time"
+    elif (date_from, date_to) == presets["this_month"]:
+        active_preset = "this_month"
+    elif (date_from, date_to) == presets["last_3_months"]:
+        active_preset = "last_3_months"
+    elif (date_from, date_to) == presets["last_6_months"]:
+        active_preset = "last_6_months"
+    else:
+        active_preset = None
+
+    summary      = get_summary_stats(session["user_id"], date_from=date_from, date_to=date_to)
+    transactions = get_recent_transactions(session["user_id"], date_from=date_from, date_to=date_to)
+    categories   = get_category_breakdown(session["user_id"], date_from=date_from, date_to=date_to)
+
+    return render_template(
+        "profile.html",
+        user=user_data,
+        summary=summary,
+        transactions=transactions,
+        categories=categories,
+        currency_symbol=currency_symbol,
+        date_from=date_from,
+        date_to=date_to,
+        active_preset=active_preset,
+        presets=presets,
+    )
 
 
 @app.route("/profile/settings", methods=["POST"])
