@@ -251,6 +251,7 @@ def profile():
         date_to=date_to,
         active_preset=active_preset,
         presets=presets,
+        today=today.strftime("%Y-%m-%d"),
     )
 
 
