@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">{% endblock %}
 
 {% block title %}{{ user.name }} — Profile{% endblock %}
 
@@ -94,7 +95,7 @@
             <form method="GET" action="{{ url_for('profile') }}" class="filter-custom">
                 <input type="date" name="date_from" value="{{ date_from or '' }}">
                 <span class="filter-sep">to</span>
-                <input type="date" name="date_to" value="{{ date_to or today }}">
+                <input type="date" name="date_to" value="{{ date_to or '' }}">
                 <button type="submit" class="btn-primary btn-sm">Apply</button>
             </form>
         </div>

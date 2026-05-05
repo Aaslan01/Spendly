@@ -1,6 +1,16 @@
 from database.db import get_db
 
 
+def _build_date_filter(user_id: int, date_from: str | None, date_to: str | None):
+    # `where` is built from hardcoded fragments only — all values go through params
+    conditions = ["user_id = ?"]
+    params: list = [user_id]
+    if date_from and date_to:
+        conditions.append("date BETWEEN ? AND ?")
+        params.extend([date_from, date_to])
+    return " AND ".join(conditions), params
+
+
 def get_category_breakdown(user_id: int, date_from: str | None = None, date_to: str | None = None) -> list[dict]:
     """
     Fetches category breakdown for a given user.
@@ -18,22 +28,15 @@ def get_category_breakdown(user_id: int, date_from: str | None = None, date_to: 
     conn = get_db()
     cursor = conn.cursor()
 
-    conditions = ["user_id = ?"]
-    params: list = [user_id]
-    if date_from and date_to:
-        conditions.append("date BETWEEN ? AND ?")
-        params.extend([date_from, date_to])
-    where = " AND ".join(conditions)
+    where, params = _build_date_filter(user_id, date_from, date_to)
 
     # Get category totals grouped and ordered by amount DESC
     cursor.execute(
-        f"""
-        SELECT category, SUM(amount) as total
-        FROM expenses
-        WHERE {where}
-        GROUP BY category
-        ORDER BY total DESC
-        """,
+        "SELECT category, SUM(amount) as total "
+        "FROM expenses "
+        "WHERE " + where + " "
+        "GROUP BY category "
+        "ORDER BY total DESC",
         params
     )
 
@@ -81,22 +84,15 @@ def get_recent_transactions(user_id: int, limit: int = 10, date_from: str | None
     conn = get_db()
     cursor = conn.cursor()
 
-    conditions = ["user_id = ?"]
-    params: list = [user_id]
-    if date_from and date_to:
-        conditions.append("date BETWEEN ? AND ?")
-        params.extend([date_from, date_to])
-    where = " AND ".join(conditions)
+    where, params = _build_date_filter(user_id, date_from, date_to)
     params.append(limit)
 
     cursor.execute(
-        f"""
-        SELECT date, description, category, amount
-        FROM expenses
-        WHERE {where}
-        ORDER BY date DESC
-        LIMIT ?
-        """,
+        "SELECT date, description, category, amount "
+        "FROM expenses "
+        "WHERE " + where + " "
+        "ORDER BY date DESC "
+        "LIMIT ?",
         params
     )
 
@@ -133,21 +129,14 @@ def get_summary_stats(user_id: int, date_from: str | None = None, date_to: str |
     conn = get_db()
     cursor = conn.cursor()
 
-    conditions = ["user_id = ?"]
-    params: list = [user_id]
-    if date_from and date_to:
-        conditions.append("date BETWEEN ? AND ?")
-        params.extend([date_from, date_to])
-    where = " AND ".join(conditions)
+    where, params = _build_date_filter(user_id, date_from, date_to)
 
     # Get total spent and transaction count
     cursor.execute(
-        f"""
-        SELECT COALESCE(SUM(amount), 0) AS total_spent,
-               COUNT(*) AS transaction_count
-        FROM expenses
-        WHERE {where}
-        """,
+        "SELECT COALESCE(SUM(amount), 0) AS total_spent, "
+        "COUNT(*) AS transaction_count "
+        "FROM expenses "
+        "WHERE " + where,
         params
     )
 
@@ -166,14 +155,12 @@ def get_summary_stats(user_id: int, date_from: str | None = None, date_to: str |
 
     # Get top category by total spending
     cursor.execute(
-        f"""
-        SELECT category, SUM(amount) AS category_total
-        FROM expenses
-        WHERE {where}
-        GROUP BY category
-        ORDER BY category_total DESC
-        LIMIT 1
-        """,
+        "SELECT category, SUM(amount) AS category_total "
+        "FROM expenses "
+        "WHERE " + where + " "
+        "GROUP BY category "
+        "ORDER BY category_total DESC "
+        "LIMIT 1",
         params
     )
 

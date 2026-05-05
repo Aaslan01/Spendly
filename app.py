@@ -27,6 +27,22 @@ def get_currency_symbol(currency_code):
     return CURRENCY_SYMBOLS.get(currency_code, currency_code)
 
 
+def _parse_date(s):
+    try:
+        return datetime.strptime(s, "%Y-%m-%d").date() if s else None
+    except ValueError:
+        return None
+
+
+def _first_of_month_n_months_ago(reference_date, n):
+    month = reference_date.month - n
+    year  = reference_date.year
+    while month <= 0:
+        month += 12
+        year  -= 1
+    return date_type(year, month, 1)
+
+
 def detect_currency_from_ip():
     """
     Detects the user's currency based on their IP address using ipapi.co.
@@ -191,12 +207,6 @@ def profile():
     currency_symbol = get_currency_symbol(user_data["currency"])
 
     # Parse and validate date filter params
-    def _parse_date(s):
-        try:
-            return datetime.strptime(s, "%Y-%m-%d").date() if s else None
-        except ValueError:
-            return None
-
     d_from = _parse_date(request.args.get("date_from", "").strip())
     d_to   = _parse_date(request.args.get("date_to",   "").strip())
 
@@ -209,19 +219,10 @@ def profile():
 
     # Compute preset date ranges
     today = date_type.today()
-
-    def _first_of_month_n_months_ago(n):
-        month = today.month - n
-        year  = today.year
-        while month <= 0:
-            month += 12
-            year  -= 1
-        return date_type(year, month, 1)
-
     presets = {
         "this_month":    (today.replace(day=1).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
-        "last_3_months": (_first_of_month_n_months_ago(3).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
-        "last_6_months": (_first_of_month_n_months_ago(6).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
+        "last_3_months": (_first_of_month_n_months_ago(today, 3).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
+        "last_6_months": (_first_of_month_n_months_ago(today, 6).strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")),
     }
 
     # Determine which preset is active
