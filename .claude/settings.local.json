@@ -33,7 +33,11 @@
       "Bash(pip install *)",
       "Bash(curl *)",
       "Bash(git pull *)",
-      "Bash(pkill -f \"python app.py\")"
+      "Bash(pkill -f \"python app.py\")",
+      "mcp__plugin_figma_figma__get_design_context",
+      "mcp__plugin_figma_figma__whoami",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "mcp__plugin_figma_figma__get_metadata"
     ]
   }
 }
