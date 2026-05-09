@@ -1150,6 +1150,7 @@ a { color: inherit; text-decoration: none; }
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
 }
 
 .filter-presets {
